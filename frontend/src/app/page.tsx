@@ -16,23 +16,23 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white font-sans selection:bg-blue-500 selection:text-white">
+    <div className="min-h-screen bg-background text-foreground font-sans selection:bg-teal-500 selection:text-white">
       {/* Header */}
-      <header className="p-6 flex justify-between items-center border-b border-gray-800">
+      <header className="p-6 flex justify-between items-center border-b border-teal-100/50 bg-white/50 backdrop-blur-md">
         <div className="flex items-center space-x-2">
-          <ShieldCheck className="w-8 h-8 text-blue-500" />
-          <h1 className="text-2xl font-bold tracking-tight">ProvChain</h1>
+          <ShieldCheck className="w-8 h-8 text-teal-600" />
+          <h1 className="text-2xl font-bold tracking-tight text-teal-900">ProvChain</h1>
         </div>
         <div>
           {account ? (
-            <div className="px-4 py-2 bg-gray-800 rounded-lg text-sm text-gray-400 font-mono border border-gray-700 flex items-center space-x-2">
+            <div className="px-4 py-2 bg-teal-50 rounded-lg text-sm text-teal-700 font-mono border border-teal-200 flex items-center space-x-2">
               <span>{account.slice(0, 6)}...{account.slice(-4)}</span>
-              <Copy className="w-4 h-4 cursor-pointer hover:text-white" />
+              <Copy className="w-4 h-4 cursor-pointer hover:text-teal-900" />
             </div>
           ) : (
             <button
               onClick={handleConnect}
-              className="px-6 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg font-medium transition-all shadow-[0_0_15px_rgba(37,99,235,0.5)]"
+              className="px-6 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg font-medium transition-all shadow-[0_4px_14px_0_rgba(20,184,166,0.39)]"
             >
               Connect Wallet
             </button>
@@ -42,10 +42,10 @@ export default function Home() {
 
       {/* Hero */}
       <main className="flex flex-col items-center justify-center py-20 px-4 text-center">
-        <h2 className="text-5xl md:text-7xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+        <h2 className="text-5xl md:text-7xl font-extrabold mb-6 text-teal-900">
           Trust, Verified.
         </h2>
-        <p className="text-xl text-gray-400 max-w-2xl mb-12">
+        <p className="text-xl text-teal-700/80 max-w-2xl mb-12 font-medium">
           The decentralized standard for tracking luxury goods and pharmaceuticals. 
           Prevent counterfeits with immutable blockchain provenance.
         </p>
@@ -53,10 +53,12 @@ export default function Home() {
         <div className="grid md:grid-cols-2 gap-8 w-full max-w-4xl">
           {/* Manufacturer Card */}
           <Link href="/manufacturer" className="group">
-            <div className="p-8 rounded-2xl bg-gray-800 border border-gray-700 hover:border-blue-500 transition-all hover:shadow-[0_0_30px_rgba(59,130,246,0.3)] h-full flex flex-col items-center">
-              <Box className="w-16 h-16 text-blue-400 mb-6 group-hover:scale-110 transition-transform" />
-              <h3 className="text-2xl font-bold mb-4">Manufacturers</h3>
-              <p className="text-gray-400">
+            <div className="p-8 rounded-2xl bg-white border border-teal-100 hover:border-teal-500 transition-all hover:shadow-[0_10px_30px_rgba(20,184,166,0.2)] h-full flex flex-col items-center">
+              <div className="bg-teal-50 p-4 rounded-full mb-6 group-hover:bg-teal-100 transition-colors">
+                 <Box className="w-8 h-8 text-teal-600" />
+              </div>
+              <h3 className="text-2xl font-bold mb-4 text-teal-900">Manufacturers</h3>
+              <p className="text-teal-700/70">
                 Register new products, mint digital twins (NFTs), and manage your supply chain.
               </p>
             </div>
@@ -64,10 +66,12 @@ export default function Home() {
 
           {/* Consumer Card */}
           <Link href="/consumer" className="group">
-            <div className="p-8 rounded-2xl bg-gray-800 border border-gray-700 hover:border-purple-500 transition-all hover:shadow-[0_0_30px_rgba(168,85,247,0.3)] h-full flex flex-col items-center">
-              <Scan className="w-16 h-16 text-purple-400 mb-6 group-hover:scale-110 transition-transform" />
-              <h3 className="text-2xl font-bold mb-4">Consumers</h3>
-              <p className="text-gray-400">
+            <div className="p-8 rounded-2xl bg-white border border-teal-100 hover:border-teal-500 transition-all hover:shadow-[0_10px_30px_rgba(20,184,166,0.2)] h-full flex flex-col items-center">
+              <div className="bg-teal-50 p-4 rounded-full mb-6 group-hover:bg-teal-100 transition-colors">
+                  <Scan className="w-8 h-8 text-teal-600" />
+              </div>
+              <h3 className="text-2xl font-bold mb-4 text-teal-900">Consumers</h3>
+              <p className="text-teal-700/70">
                 Scan QR codes to verify authenticity, check ownership history, and report issues.
               </p>
             </div>
@@ -76,7 +80,7 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="py-8 text-center text-gray-600 text-sm">
+      <footer className="py-8 text-center text-teal-600/50 text-sm">
         Powered by Ethereum & Next.js
       </footer>
     </div>

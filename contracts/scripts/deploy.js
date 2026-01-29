@@ -1,7 +1,7 @@
-import { ethers } from "hardhat";
+const hre = require("hardhat");
 
 async function main() {
-    const ProductChain = await ethers.getContractFactory("ProductChain");
+    const ProductChain = await hre.ethers.getContractFactory("ProductChain");
     const productChain = await ProductChain.deploy();
 
     await productChain.waitForDeployment();
@@ -9,8 +9,6 @@ async function main() {
     console.log(`ProductChain deployed to ${productChain.target}`);
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
 main().catch((error) => {
     console.error(error);
     process.exitCode = 1;
