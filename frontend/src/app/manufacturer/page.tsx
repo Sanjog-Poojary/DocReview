@@ -3,24 +3,38 @@
 import { useState } from "react";
 import QRGenerator from "@/components/QRGenerator";
 import { Copy, PackagePlus } from "lucide-react";
+import { createProduct } from "@/lib/web3";
 
 export default function ManufacturerDashboard() {
   const [productName, setProductName] = useState("");
   const [manufacturer, setManufacturer] = useState("");
+  const [loading, setLoading] = useState(false);
   const [createdProduct, setCreatedProduct] = useState<{ id: string; name: string } | null>(null);
+  const [status, setStatus] = useState<{type: 'success' | 'error', msg: string} | null>(null);
 
   const handleCreateProduct = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Call Smart Contract here
-    // const tx = await contract.createProduct(productName, manufacturer, "ipfs://...");
-    
-    // Simulate creation for now
-    const mockId = Math.floor(Math.random() * 10000).toString();
-    setCreatedProduct({ id: mockId, name: productName });
-    alert(`Product created! ID: ${mockId}`);
+    setLoading(true);
+    setStatus(null);
+    setCreatedProduct(null);
+
+    try {
+        const result = await createProduct(productName, manufacturer);
+        // ID is currently "PENDING" in our simplified flow, or random fallback if we kept it.
+        // But since we removed fallback, if this succeeds, it's real.
+        setCreatedProduct({ id: result.id, name: productName });
+        setStatus({ type: 'success', msg: "Minted successfully! Please wait for confirmation." });
+        setProductName("");
+        setManufacturer("");
+    } catch (error) {
+        console.error(error);
+        setStatus({ type: 'error', msg: "Minting failed. Check console." });
+    } finally {
+        setLoading(false);
+    }
   };
 
-  const productUrl = createdProduct 
+  const productUrl = createdProduct && createdProduct.id !== "PENDING"
     ? `${window.location.origin}/product/${createdProduct.id}` 
     : "";
 
@@ -61,11 +75,17 @@ export default function ManufacturerDashboard() {
               </div>
               <button
                 type="submit"
-                className="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-lg font-bold transition-all shadow-lg hover:shadow-teal-500/30"
+                disabled={loading}
+                className={`w-full py-3 rounded-lg font-bold transition-all shadow-lg text-white ${loading ? 'bg-teal-400 cursor-wait' : 'bg-teal-600 hover:bg-teal-700 hover:shadow-teal-500/30'}`}
               >
-                Mint NFT & Generate QR
+                {loading ? "Minting..." : "Mint NFT & Generate QR"}
               </button>
             </form>
+            {status && (
+                <div className={`mt-4 p-3 rounded-lg text-sm text-center ${status.type === 'success' ? 'bg-teal-100 text-teal-800' : 'bg-red-100 text-red-800'}`}>
+                    {status.msg}
+                </div>
+            )}
           </div>
 
           {/* Result */}
@@ -73,11 +93,19 @@ export default function ManufacturerDashboard() {
             {createdProduct ? (
               <div className="animate-fade-in text-center">
                 <h3 className="text-lg font-semibold mb-4 text-teal-700">Product Registered!</h3>
-                <QRGenerator value={productUrl} />
-                <div className="mt-6 flex items-center justify-center space-x-2 text-sm text-teal-600 bg-teal-50 p-2 rounded-lg border border-teal-100">
-                  <span className="truncate max-w-[200px]">{productUrl}</span>
-                  <Copy className="w-4 h-4 cursor-pointer hover:text-teal-800" onClick={() => navigator.clipboard.writeText(productUrl)} />
-                </div>
+                {createdProduct.id !== "PENDING" ? (
+                    <>
+                        <QRGenerator value={productUrl} />
+                        <div className="mt-6 flex items-center justify-center space-x-2 text-sm text-teal-600 bg-teal-50 p-2 rounded-lg border border-teal-100">
+                        <span className="truncate max-w-[200px]">{productUrl}</span>
+                        <Copy className="w-4 h-4 cursor-pointer hover:text-teal-800" onClick={() => navigator.clipboard.writeText(productUrl)} />
+                        </div>
+                    </>
+                ) : (
+                    <div className="p-8 bg-teal-50 rounded-full animate-pulse text-teal-600">
+                        Processing Transaction...
+                    </div>
+                )}
               </div>
             ) : (
               <div className="text-teal-400/50 text-center">
@@ -86,8 +114,8 @@ export default function ManufacturerDashboard() {
               </div>
             )}
           </div>
-        </div>
       </div>
+    </div>
     </div>
   );
 }

@@ -3,6 +3,7 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CheckCircle, Clock, MapPin, Truck } from "lucide-react";
+import { getProduct, getProductHistory } from "@/lib/web3";
 
 interface HistoryItem {
   from: string;
@@ -17,38 +18,44 @@ export default function ProductPage() {
   const [history, setHistory] = useState<HistoryItem[]>([]);
 
   useEffect(() => {
-    // TODO: Fetch from blockchain using `id`
-    // const p = await contract.getProduct(id);
-    // const h = await contract.getProductHistory(id);
-
-    // Mock data
     if (id) {
-      setProduct({
-        id: id,
-        name: "Luxury Handbag",
-        manufacturer: "Gucci",
-        manufactureDate: "2023-10-15",
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Kelley_Blue_Book_logo.svg/1200px-Kelley_Blue_Book_logo.svg.png" // Placeholder
-      });
-
-      setHistory([
-        { from: "0x000...000", to: "0xMan...Fac", timestamp: "2023-10-15", location: "Florence, Italy (Factory)" },
-        { from: "0xMan...Fac", to: "0xDis...Cen", timestamp: "2023-10-20", location: "Milan Distribution Center" },
-        { from: "0xDis...Cen", to: "0xSto...NYC", timestamp: "2023-10-25", location: "New York Flagship Store" },
-      ]);
+        setProduct(undefined); // Set loading
+        getProduct(id as string).then((p: any) => {
+            if (p) {
+                setProduct(p);
+                getProductHistory(id as string).then(setHistory);
+            } else {
+                setProduct(null); // Not found or error
+            }
+        }).catch(() => setProduct(null));
     }
   }, [id]);
 
-  if (!product) return <div className="p-10 text-center text-teal-900">Loading provenance...</div>;
+  if (product === undefined) return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600 mb-4"></div>
+          <p className="text-teal-800 font-medium">Verifying on Blockchain...</p>
+      </div>
+  );
+
+  if (product === null) return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+          <div className="text-center p-8 bg-red-50 rounded-xl border border-red-100">
+              <h1 className="text-2xl font-bold text-red-800 mb-2">Product Not Found</h1>
+              <p className="text-red-600 mb-4">This ID does not exist on the blockchain registry.</p>
+              <a href="/consumer" className="text-teal-600 hover:underline">Scan another product</a>
+          </div>
+      </div>
+  );
 
   return (
     <div className="min-h-screen bg-background text-foreground p-6 md:p-12">
       <div className="max-w-4xl mx-auto">
         <header className="mb-10 text-center">
             <h1 className="text-4xl font-bold mb-2 text-teal-900">{product.name}</h1>
-            <div className="flex justify-center items-center space-x-2 text-teal-600">
-                <CheckCircle className="w-5 h-5" />
-                <span className="font-mono font-medium">Authenticated by Blockchain</span>
+            <div className="flex justify-center items-center space-x-2 text-teal-600 bg-teal-50 px-4 py-2 rounded-full inline-flex border border-teal-100">
+                <CheckCircle className="w-5 h-5 text-teal-500" />
+                <span className="font-mono font-bold text-teal-800 uppercase tracking-widest text-sm">Authenticated</span>
             </div>
         </header>
 
