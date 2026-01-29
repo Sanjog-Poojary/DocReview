@@ -169,6 +169,9 @@ function getProductHistory(uint256 tokenId) public view returns (TransferRecord[
 3. **Consumer Verification**
    ![Consumer Scan](docs/images/consumer_scan.png)
 
+4. **Product Provenance**
+   ![Product Provenance](docs/images/product_provenance.png)
+
 
 ---
 
