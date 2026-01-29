@@ -159,9 +159,16 @@ function getProductHistory(uint256 tokenId) public view returns (TransferRecord[
 
 *Placeholders for feature demonstration:*
 
-1. **Landing Page**: Clean entry point for users to connect wallets.
-2. **Manufacturer Dashboard**: Form to input product details and generate QR codes.
-3. **Product Provenance**: Detailed view of a product's history using timeline visualization.
+
+1. **Landing Page**
+   ![Landing Page](docs/images/landing_page.png)
+
+2. **Manufacturer Dashboard**
+   ![Manufacturer Dashboard](docs/images/manufacturer_dashboard.png)
+
+3. **Consumer Verification**
+   ![Consumer Scan](docs/images/consumer_scan.png)
+
 
 ---
 
